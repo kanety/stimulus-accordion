@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <script type="importmap">
+    {
+      "imports": {
+        "@hotwired/stimulus": "/node_modules/@hotwired/stimulus/dist/stimulus.js",
+        "@kanety/stimulus-accordion": "/dist/index.module.js"
+      }
+    }
+  </script>
+  <script type="module">
+    import { Application, Controller } from '@hotwired/stimulus';
+    import AccordionController from '@kanety/stimulus-accordion';
+    const application = Application.start();
+    application.register('accordion', AccordionController);
+  </script>
+  <link rel="stylesheet" href="/dist/index.css"></link>
+</head>
+<body>
+  <h1>Opened text</h1>
+  <div class="st-accordion" data-controller="accordion">
+    <div>
+      <a href="#content1" class="st-accordion__icon"
+         data-action="accordion#toggle"
+         data-accordion-opened-text-param="Content 1 Opened"
+         data-accordion-closed-text-param="Content 1 Closed">Content 1</a></div>
+    <div class="st-accordion__content" data-accordion-id="content1">
+      <p>Content 1</p>
+    </div>
+  </div>
+</body>
+</html>

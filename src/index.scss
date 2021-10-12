@@ -1,0 +1,30 @@
+.st-accordion {
+  .st-accordion__icon:before {
+    content: '▼';
+    display: inline-block;
+    margin-right: 5px;
+    font-size: 50%;
+    transform: rotate(-90deg);
+  }
+  .st-accordion__icon--opened:before {
+    transform: rotate(0deg);
+  }
+
+  .st-accordion__content:not(.st-accordion__content--visible) {
+    transition: all .2s;
+    height: 0;
+    opacity: 0;
+    visibility: hidden;
+    overflow: hidden;
+  }
+  .st-accordion__content.st-accordion__content--visible {
+    transition: all .2s;
+    opacity: 1;
+    visibility: visible;
+    overflow: hidden;
+  }
+}
+
+.st-accordion--disable-trans {
+  transition: none !important;
+}
