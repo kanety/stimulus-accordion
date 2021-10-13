@@ -1,6 +1,6 @@
 # stimulus-accordion
 
-A stimulus controller for simple accordion ui.
+A stimulus controller for simple accordion menu.
 
 ## Dependencies
 
