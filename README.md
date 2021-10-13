@@ -47,13 +47,23 @@ Build html as follows:
 
 ### Options
 
+#### store-key
+
+Save opened state to `sessionStorage`:
+
+```html
+<div data-controller="accordion"
+     data-accordion-store-key-value="YOUR_KEY">
+</div>
+```
+
 #### opened-text, closed-text
 
 You can change header text of accordion when opened or closed:
 
 ```html
-<div class="st-accordion" data-controller="accordion">
-  <div><a href="#content1" class="st-accordion__icon"
+<div data-controller="accordion">
+  <div><a href="#content1"
           data-action="accordion#toggle"
           data-accordion-opened-text-param="Opened Content 1"
           data-accordion-closed-text-param="Closed Content 1">Content 1</a></div>

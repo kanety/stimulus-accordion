@@ -1,34 +1,53 @@
 import { Controller } from '@hotwired/stimulus';
+import Store from './store';
 import './index.scss';
 
 export default class extends Controller {
+  static values = {
+    storeKey: String
+  };
+
   get togglers() {
     return this.context.bindingObserver.bindings
                .filter(binding => binding.action.methodName == 'toggle')
                .map(binding => binding.action.element);
   }
 
+  get openedTogglers() {
+    return this.togglers.filter(toggler => this.isOpened(toggler));
+  }
+
+  get contents() {
+    return this.scope.findAllElements('[data-accordion-id]')
+  }
+
   connect() {
     this.enableTrans(false);
+
     this.init();
+    this.store = new Store(this);
+    this.store.load();
+
     setTimeout(() => this.enableTrans(true), 200);
   }
 
   enableTrans(enabled) {
-    if (enabled) {
-      this.element.classList.add('st-accordion--disable-trans');
-    } else {
-      this.element.classList.remove('st-accordion--disable-trans');
-    }
+    this.contents.forEach(content => {
+      if (enabled) {
+        content.classList.remove('st-accordion--disable-trans');
+      } else {
+        content.classList.add('st-accordion--disable-trans');
+      }
+    });
   }
 
   init() {
     this.togglers.forEach(toggler => {
       let content = this.findContent(toggler);
       if (this.isOpened(toggler)) {
-        this.toggleClass(toggler, content, true);
+        this.show(toggler, content);
       } else {
-        this.toggleClass(toggler, content, false);
+        this.hide(toggler, content);
       }
     })
   }
@@ -51,14 +70,24 @@ export default class extends Controller {
 
   open(toggler) {
     let content = this.findContent(toggler);
-    this.toggleClass(toggler, content, true);
+    this.show(toggler, content);
+    this.store.save();
     this.dispatch('opened', { detail: { toggler: toggler, content: content } });
   }
 
   close(toggler) {
     let content = this.findContent(toggler);
-    this.toggleClass(toggler, content, false);
+    this.hide(toggler, content);
+    this.store.save();
     this.dispatch('closed', { detail: { toggler: toggler, content: content } });
+  }
+
+  show(toggler, content) {
+    this.toggleClass(toggler, content, true);
+  }
+
+  hide(toggler, content) {
+    this.toggleClass(toggler, content, false);
   }
 
   isOpened(toggler) {
@@ -85,8 +114,12 @@ export default class extends Controller {
     }
   }
 
-  findContent(target) {
-    let id = target.getAttribute('href').replace(/^#/, '');
+  findContent(toggler) {
+    let id = this.getID(toggler);
     return this.scope.findElement(`[data-accordion-id="${id}"]`);
+  }
+
+  getID(toggler) {
+    return  toggler.getAttribute('href').replace(/^#/, '');
   }
 }
