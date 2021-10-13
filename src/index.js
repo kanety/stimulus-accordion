@@ -15,7 +15,11 @@ export default class extends Controller {
   }
 
   enableTrans(enabled) {
-    this.element.classList.toggle('st-accordion--disable-trans', !enabled);
+    if (enabled) {
+      this.element.classList.add('st-accordion--disable-trans');
+    } else {
+      this.element.classList.remove('st-accordion--disable-trans');
+    }
   }
 
   init() {
@@ -62,10 +66,15 @@ export default class extends Controller {
   }
 
   toggleClass(toggler, content, opened) {
-    toggler.classList.toggle('st-accordion__icon--opened', opened);
-
-    content.classList.toggle('st-accordion__content--visible', opened);
-    content.style.height = (opened ? content.scrollHeight : 0) + 'px';
+    if (opened) {
+      toggler.classList.add('st-accordion__icon--opened');
+      content.classList.add('st-accordion__content--visible');
+      content.style.height = content.scrollHeight + 'px';
+    } else {
+      toggler.classList.remove('st-accordion__icon--opened');
+      content.classList.remove('st-accordion__content--visible');
+      content.style.height = '0px';
+    }
 
     if (opened) {
       let openedText = toggler.getAttribute('data-accordion-opened-text-param');
