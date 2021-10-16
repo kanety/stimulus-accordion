@@ -1,10 +1,4 @@
-import { Application } from '@hotwired/stimulus';
-import AccordionController from 'index';
-
-const application = Application.start();
-application.register('accordion', AccordionController);
-
-describe('basic', () => {
+describe('opened-text', () => {
   beforeEach(() => {
     document.body.innerHTML = `
       <div data-controller="accordion">

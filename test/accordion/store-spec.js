@@ -1,9 +1,3 @@
-import { Application } from '@hotwired/stimulus';
-import AccordionController from 'index';
-
-const application = Application.start();
-application.register('accordion', AccordionController);
-
 describe('store', () => {
   beforeEach(() => {
     document.body.innerHTML = `
