@@ -16,6 +16,8 @@ export default class Store {
   }
 
   load() {
+    if (!this.key) return;
+
     let ids = this.constructor.load(this.key);
     if (!ids) return;
 
@@ -31,22 +33,28 @@ export default class Store {
   }
 
   save() {
+    if (!this.key) return;
+
     let ids = this.openedTogglers.map(toggler => this.controller.getID(toggler));
     this.constructor.save(this.key, ids);
   }
 
   static load(key) {
-    if (!key) return;
     let json = sessionStorage.getItem(key);
     try {
       return JSON.parse(json)
-    } catch {
+    } catch(error) {
+      console.error(error);
       return null;
     }
   }
 
   static save(key, value) {
-    if (!key) return;
-    sessionStorage.setItem(key, JSON.stringify(value));
+    try {
+      sessionStorage.setItem(key, JSON.stringify(value));
+    } catch(error) {
+      console.error(error);
+      return null;
+    }
   }
 }
