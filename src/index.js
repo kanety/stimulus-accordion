@@ -54,7 +54,7 @@ export default class extends Controller {
 
   toggle(e) {
     this.togglers.forEach(toggler => {
-      if (toggler == e.target) {
+      if (toggler.contains(e.target)) {
         if (this.isOpened(toggler)) {
           this.close(toggler);
         } else {
