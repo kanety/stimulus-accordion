@@ -98,7 +98,7 @@ export default class extends Controller {
     if (opened) {
       toggler.classList.add('st-accordion__icon--opened');
       content.classList.add('st-accordion__content--visible');
-      content.style.height = content.scrollHeight + 'px';
+      content.style.height = 'unset';
     } else {
       toggler.classList.remove('st-accordion__icon--opened');
       content.classList.remove('st-accordion__content--visible');
