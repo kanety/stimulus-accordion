@@ -22,32 +22,18 @@ export default class extends Controller {
   }
 
   connect() {
-    this.enableTrans(false);
-
     this.init();
     this.store = new Store(this);
     this.store.load();
-
-    setTimeout(() => this.enableTrans(true), 200);
-  }
-
-  enableTrans(enabled) {
-    this.contents.forEach(content => {
-      if (enabled) {
-        content.classList.remove('st-accordion--disable-trans');
-      } else {
-        content.classList.add('st-accordion--disable-trans');
-      }
-    });
   }
 
   init() {
     this.togglers.forEach(toggler => {
       let content = this.findContent(toggler);
       if (this.isOpened(toggler)) {
-        this.show(toggler, content);
+        this.show(toggler, content, false);
       } else {
-        this.hide(toggler, content);
+        this.hide(toggler, content, false);
       }
     })
   }
@@ -82,36 +68,60 @@ export default class extends Controller {
     this.dispatch('closed', { detail: { toggler: toggler, content: content } });
   }
 
-  show(toggler, content) {
+  show(toggler, content, transition = true) {
+    if (transition) {
+      content.style.height = '0px';
+      content.removeEventListener('transitionend', this.transitionEnd);
+      content.addEventListener('transitionend', this.transitionEnd);
+      setTimeout(() => {
+        content.style.height = content.scrollHeight + 'px';
+      });
+    }
+
     this.toggleClass(toggler, content, true);
+    this.toggleText(toggler, true);
   }
 
-  hide(toggler, content) {
+  hide(toggler, content, transition = true) {
+    if (transition) {
+      content.style.height = content.scrollHeight + 'px';
+      content.removeEventListener('transitionend', this.transitionEnd);
+      content.addEventListener('transitionend', this.transitionEnd);
+      setTimeout(() => {
+        content.style.height = '0px';
+      });
+    }
+
     this.toggleClass(toggler, content, false);
+    this.toggleText(toggler, false);
   }
 
-  isOpened(toggler) {
-    return toggler.matches('.st-accordion__icon--opened');
+  transitionEnd(e) {
+    e.target.style.height = '';
   }
 
   toggleClass(toggler, content, opened) {
     if (opened) {
       toggler.classList.add('st-accordion__icon--opened');
       content.classList.add('st-accordion__content--visible');
-      content.style.height = content.scrollHeight + 'px';
     } else {
       toggler.classList.remove('st-accordion__icon--opened');
       content.classList.remove('st-accordion__content--visible');
-      content.style.height = '0px';
     }
+  }
 
+  toggleText(toggler, opened) {
+    let text;
     if (opened) {
-      let openedText = toggler.getAttribute('data-accordion-opened-text-param');
-      if (openedText) toggler.innerHTML = openedText;
+      text = toggler.getAttribute('data-accordion-opened-text-param');
     } else {
-      let closedText = toggler.getAttribute('data-accordion-closed-text-param');
-      if (closedText) toggler.innerHTML = closedText;
+      text = toggler.getAttribute('data-accordion-closed-text-param');
     }
+    if (text) toggler.innerHTML = text;
+  }
+
+  isOpened(toggler) {
+    return toggler.matches('.st-accordion__icon--opened');
   }
 
   findContent(toggler) {
@@ -120,6 +130,6 @@ export default class extends Controller {
   }
 
   getID(toggler) {
-    return  toggler.getAttribute('href').replace(/^#/, '');
+    return toggler.getAttribute('href').replace(/^#/, '');
   }
 }
