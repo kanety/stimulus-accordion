@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.3.0
+
+* Add store target option.
+
 ## 1.2.0
 
 * Move dependencies to peerDependencies.
