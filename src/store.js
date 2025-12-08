@@ -15,10 +15,15 @@ export default class Store {
     return this.controller.storeKeyValue;
   }
 
-  load() {
-    if (!this.key) return;
+  get target() {
+    if (this.controller.hasStoreTarget) {
+      return this.controller.storeTarget;
+    }
+    return null;
+  }
 
-    let ids = this.constructor.load(this.key);
+  load() {
+    let ids = this.loadIDs();
     if (!ids) return;
 
     let idSet = new Set(ids);
@@ -32,11 +37,26 @@ export default class Store {
     });
   }
 
-  save() {
-    if (!this.key) return;
+  loadIDs() {
+    if (this.key) {
+      return this.constructor.load(this.key);
+    } else if (this.target && this.target.value) {
+      return this.target.value.split('\t');
+    }
+    return null;
+  }
 
+  save() {
     let ids = this.openedTogglers.map(toggler => this.controller.getID(toggler));
-    this.constructor.save(this.key, ids);
+    this.saveIDs(ids)
+  }
+
+  saveIDs(ids) {
+    if (this.key) {
+      this.constructor.save(this.key, ids);
+    } else if (this.target) {
+      this.target.value = ids.join('\t');
+    }
   }
 
   static load(key) {

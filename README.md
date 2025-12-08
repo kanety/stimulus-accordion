@@ -57,6 +57,16 @@ Save opened state to `sessionStorage`:
 </div>
 ```
 
+#### store target
+
+Save opened state to `input` element:
+
+```html
+<div data-controller="accordion">
+  <input type="hidden" data-accordion-target="store">
+</div>
+```
+
 #### opened-text, closed-text
 
 You can change header text of accordion when opened or closed:

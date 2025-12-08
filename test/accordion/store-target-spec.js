@@ -1,8 +1,8 @@
-describe('store', () => {
+describe('store-target', () => {
   beforeEach(() => {
     document.body.innerHTML = `
-      <div data-controller="accordion"
-           data-accordion-store-key-value="accordion">
+      <div data-controller="accordion">
+        <input type="hidden" value="content1" data-accordion-target="store">
         <div><a href="#content1" data-action="accordion#toggle">Content 1</a></div>
         <div data-accordion-id="content1">
           <p>content 1</p>
@@ -18,11 +18,11 @@ describe('store', () => {
   });
 
   it('saves states', () => {
-    $('a[href="#content1"]').click();
-    expect($('[data-accordion-id="content1"]').matches('.st-accordion__content--visible')).toEqual(true);
+    $('a[href="#content2"]').click();
+    expect($('input').value).toEqual('content2');
   });
 
-  it('loads states', () => {
+  it('load states', () => {
     expect($('[data-accordion-id="content1"]').matches('.st-accordion__content--visible')).toEqual(true);
   });
 });

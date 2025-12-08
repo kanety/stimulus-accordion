@@ -3,6 +3,7 @@ import Store from './store';
 import './index.scss';
 
 export default class extends Controller {
+  static targets = ['store'];
   static values = {
     storeKey: String
   };
